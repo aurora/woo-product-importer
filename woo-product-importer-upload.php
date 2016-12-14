@@ -446,7 +446,7 @@
                             $language = $language_codes[$lcode];
                             $country = $country_codes[$ccode];
 
-							$locale_options[$loc] = strlen($parts[1]) > 0 ? $language.'/'.$country.' ('.$parts[1].')' : $language.'/'.$country;
+							$locale_options[$loc] = ( !empty($parts[1]) && strlen($parts[1]) > 0 ) ? $language.'/'.$country.' ('.$parts[1].')' : $language.'/'.$country;
 						}
 					}
                 }
