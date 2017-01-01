@@ -440,13 +440,13 @@
 						
 						$lcode = strtolower($lcode);
 
-						$language = $language_codes[$lcode];
-						$country = $country_codes[$ccode];
-
 						if( array_key_exists($lcode, $language_codes) &&
 							array_key_exists($ccode, $country_codes)){
 
-							$locale_options[$loc] = strlen($parts[1]) > 0 ? $language.'/'.$country.' ('.$parts[1].')' : $language.'/'.$country;
+                            $language = $language_codes[$lcode];
+                            $country = $country_codes[$ccode];
+
+							$locale_options[$loc] = ( !empty($parts[1]) && strlen($parts[1]) > 0 ) ? $language.'/'.$country.' ('.$parts[1].')' : $language.'/'.$country;
 						}
 					}
                 }

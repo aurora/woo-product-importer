@@ -29,7 +29,8 @@
         'post_meta_key' => $_POST['post_meta_key'],
         'user_locale' => $_POST['user_locale'],
         'import_csv_separator' => $_POST['import_csv_separator'],
-        'import_csv_hierarchy_separator' => $_POST['import_csv_hierarchy_separator']
+        'import_csv_hierarchy_separator' => $_POST['import_csv_hierarchy_separator'],
+        'row_count' => 0
     );
 ?>
 <script type="text/javascript">
