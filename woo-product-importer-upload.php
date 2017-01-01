@@ -512,9 +512,16 @@
                         ?></td>
                     </tr>
                     <tr>
+                        <th><?php _e( 'File format', 'woo-product-importer' ); ?></th>
+                        <td>
+                            <input type="radio" name="import_csv_separator" onclick="jQuery('input[id=import_csv_separator_char]').prop('disabled', false)" id="import_csv_set_separator" value="," checked="checked" /> CSV&nbsp;&nbsp;&nbsp;
+                            <input type="radio" name="import_csv_separator" onclick="jQuery('input[id=import_csv_separator_char]').prop('disabled', true)" value="&#9;" /> TSV
+                        </td>
+                    </tr>
+                    <tr>
                         <th><?php _e( 'CSV field separator', 'woo-product-importer' ); ?></th>
                         <td>
-                            <input type="text" name="import_csv_separator" id="import_csv_separator" class="code" value="," maxlength="1">
+                            <input type="text" id="import_csv_separator_char" class="code" value="," maxlength="1" onblur="jQuery('input[id=import_csv_set_separator]').val(this.value)" />
                             <p class="description"><?php _e( 'Enter the character used to separate each field in your CSV. The default is the comma (,) character. Some formats use a semicolon (;) instead.', 'woo-product-importer' ); ?></p>
                         </td>
                     </tr>
