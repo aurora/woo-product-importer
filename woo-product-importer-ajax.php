@@ -357,7 +357,7 @@
                         foreach($attribute_taxonomies as $attr){
                             if (! is_object($attr)) continue;
                             if (strtolower($field_name) === strtolower($attr->attribute_name) &&
-                                taxonomy_exists( $woocommerce->attribute_taxonomy_name( $attr->attribute_name))){
+                                taxonomy_exists( wc_attribute_taxonomy_name( $attr->attribute_name))){
                                 $product_attr = $attr;
                                 break;
                             } 
@@ -366,7 +366,7 @@
                         // existing attribute
                         if (! is_null($product_attr)){ 
                             // check if this is a new term(s) for the attribute 
-                            $field_name = $woocommerce->attribute_taxonomy_name($product_attr->attribute_name);
+                            $field_name = wc_attribute_taxonomy_name($product_attr->attribute_name);
                             $value = '';
                             $terms = explode('|', $col); 
                             foreach($terms as $t) {
