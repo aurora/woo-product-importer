@@ -380,8 +380,8 @@
 
                                 // if term does not exist, try to insert it.
                                 if( $term === false || $term === 0 || $term === null) {
-                                    $t = $product_attr->attribute_type === 'select' ? sanitize_title($t) : stripslashes(strip_tags($t));
-                                    $term = wp_insert_term($t, $field_name);
+                                    $t = stripslashes(strip_tags($t));
+                                    $term = wp_insert_term($t, $field_name, array('slug' => ($product_attr->attribute_type === 'select' ? sanitize_title($t) : $t)));
                                 }
 
                                 if(is_array($term)){
