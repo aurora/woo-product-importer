@@ -42,6 +42,12 @@
 
         $error_messages = array();
 
+        // allowed extensions for product images
+        $allowed_extensions = array('jpg', 'jpeg', 'gif', 'png');
+
+        //figure out where the uploads folder lives
+        $wp_upload_dir = wp_upload_dir();
+
         //now that we have the file, grab contents
         $temp_file_path = $post_data['uploaded_file_path'];
         $handle = fopen( $temp_file_path, 'r' );
@@ -411,8 +417,23 @@
                         $image_paths = explode('|', $col);
                         if(is_array($image_paths)) {
                             foreach($image_paths as $image_path) {
+                                $pathinfo = pathinfo($image_path);
+
+                                $image_ext = strtolower($pathinfo['extension']);
+                                if(!in_array($image_ext, $allowed_extensions)) {
+                                    $new_post_errors[] = sprintf( __( 'A valid file extension wasn\'t found in %s. Extension found was %s. Allowed extensions are: %s.', 'woo-product-importer' ), $image_url, $image_ext, implode( ',', $allowed_extensions ) );
+                                    continue;
+                                }
+
+                                $dest_filename = wp_unique_filename( $wp_upload_dir['path'], $pathinfo['basename'] );
+                                $dest_path = $wp_upload_dir['path'] . '/' . $dest_filename;
+
+                                if( ! @copy($image_path, $dest_path)) {
+                                    $new_post_errors[] = sprintf( __( 'Unable to copy file %s', 'woo-product-importer' ), $image_path );
+                                }
+
                                 $new_post_image_paths[] = array(
-                                    'path' => $image_path,
+                                    'path' => $dest_path,
                                     'source' => $image_path
                                 );
                             }
@@ -523,9 +544,6 @@
                         wp_set_object_terms($new_post_id, $term_ids, $tax);
                     }
 
-                    //figure out where the uploads folder lives
-                    $wp_upload_dir = wp_upload_dir();
-
                     //grab product images
                     foreach($new_post_image_urls as $image_index => $image_url) {
 
@@ -539,7 +557,6 @@
                         $pathinfo = pathinfo($parsed_url['path']);
 
                         //If our 'image' file doesn't have an image file extension, skip it.
-                        $allowed_extensions = array('jpg', 'jpeg', 'gif', 'png');
                         $image_ext = strtolower($pathinfo['extension']);
                         if(!in_array($image_ext, $allowed_extensions)) {
                             $new_post_errors[] = sprintf( __( 'A valid file extension wasn\'t found in %s. Extension found was %s. Allowed extensions are: %s.', 'woo-product-importer' ), $image_url, $image_ext, implode( ',', $allowed_extensions ) );
@@ -549,7 +566,6 @@
                         //figure out where we're putting this thing.
                         $dest_filename = wp_unique_filename( $wp_upload_dir['path'], $pathinfo['basename'] );
                         $dest_path = $wp_upload_dir['path'] . '/' . $dest_filename;
-                        $dest_url = $wp_upload_dir['url'] . '/' . $dest_filename;
 
                         //download the image to our local server.
                         // if allow_url_fopen is enabled, we'll use that. Otherwise, we'll try cURL
@@ -619,6 +635,7 @@
                                     )
                                 ),
                                 'post_type' => 'attachment');
+
                             $existing_attachments = get_posts($existing_attachment_query);
                             if(is_array($existing_attachments) && sizeof($existing_attachments) > 0) {
                                 //we've already got this file.
